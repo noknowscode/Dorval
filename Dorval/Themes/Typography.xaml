@@ -1,0 +1,197 @@
+<!--
+  Dorval type system. Newsreader (serif) carries identity and hierarchy;
+  Figtree (sans) carries everything you read or tap.
+  Static font instances per weight: the variable builds render their default
+  named instance on the Skia text stack and ignore FontWeight.
+  Baselines sit on the 4dp grid, so every LineHeight is a multiple of 4.
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <FontFamily x:Key="SerifRegular">ms-appx:///Assets/Fonts/Newsreader-Regular.ttf#Newsreader</FontFamily>
+  <FontFamily x:Key="SerifMedium">ms-appx:///Assets/Fonts/Newsreader-Medium.ttf#Newsreader Medium</FontFamily>
+  <FontFamily x:Key="SerifSemiBold">ms-appx:///Assets/Fonts/Newsreader-SemiBold.ttf#Newsreader SemiBold</FontFamily>
+  <FontFamily x:Key="SerifMediumItalic">ms-appx:///Assets/Fonts/Newsreader-MediumItalic.ttf#Newsreader Medium</FontFamily>
+
+  <FontFamily x:Key="SansRegular">ms-appx:///Assets/Fonts/Figtree-Regular.ttf#Figtree</FontFamily>
+  <FontFamily x:Key="SansMedium">ms-appx:///Assets/Fonts/Figtree-Medium.ttf#Figtree Medium</FontFamily>
+  <FontFamily x:Key="SansSemiBold">ms-appx:///Assets/Fonts/Figtree-SemiBold.ttf#Figtree SemiBold</FontFamily>
+  <FontFamily x:Key="SansBold">ms-appx:///Assets/Fonts/Figtree-Bold.ttf#Figtree</FontFamily>
+
+  <!--  ===== Serif: display ==========================================  -->
+
+  <Style x:Key="GreetingStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SerifMedium}" />
+    <Setter Property="FontSize" Value="38" />
+    <Setter Property="LineHeight" Value="40" />
+    <Setter Property="Foreground" Value="{StaticResource OnGreenBrush}" />
+  </Style>
+
+  <Style x:Key="PageTitleStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SerifMedium}" />
+    <Setter Property="FontSize" Value="34" />
+    <Setter Property="LineHeight" Value="36" />
+    <Setter Property="Foreground" Value="{StaticResource GreenDeepBrush}" />
+  </Style>
+
+  <Style x:Key="PageTitleOnGreenStyle"
+         BasedOn="{StaticResource PageTitleStyle}"
+         TargetType="TextBlock">
+    <Setter Property="Foreground" Value="{StaticResource OnGreenBrush}" />
+  </Style>
+
+  <Style x:Key="HeroTitleStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SerifSemiBold}" />
+    <Setter Property="FontSize" Value="30" />
+    <Setter Property="LineHeight" Value="32" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+  </Style>
+
+  <Style x:Key="DetailTitleStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SerifSemiBold}" />
+    <Setter Property="FontSize" Value="28" />
+    <Setter Property="LineHeight" Value="32" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+  </Style>
+
+  <Style x:Key="PostTitleStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SerifSemiBold}" />
+    <Setter Property="FontSize" Value="26" />
+    <Setter Property="LineHeight" Value="28" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+  </Style>
+
+  <Style x:Key="CardTitleStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SerifSemiBold}" />
+    <Setter Property="FontSize" Value="21" />
+    <Setter Property="LineHeight" Value="24" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+  </Style>
+
+  <!--  ===== Sans: reading and interface =============================  -->
+
+  <Style x:Key="EyebrowStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SansBold}" />
+    <Setter Property="FontSize" Value="11" />
+    <Setter Property="LineHeight" Value="16" />
+    <Setter Property="Foreground" Value="{StaticResource InkFaintBrush}" />
+  </Style>
+
+  <Style x:Key="EyebrowOnGreenStyle"
+         BasedOn="{StaticResource EyebrowStyle}"
+         TargetType="TextBlock">
+    <Setter Property="Foreground" Value="{StaticResource OnGreenBrush}" />
+    <Setter Property="Opacity" Value="0.85" />
+  </Style>
+
+  <Style x:Key="SectionHeadingStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SansBold}" />
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="LineHeight" Value="20" />
+    <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+  </Style>
+
+  <Style x:Key="SectionHeadingSmallStyle"
+         BasedOn="{StaticResource SectionHeadingStyle}"
+         TargetType="TextBlock">
+    <Setter Property="FontSize" Value="14" />
+  </Style>
+
+  <Style x:Key="ListTitleStyle"
+         BasedOn="{StaticResource SectionHeadingStyle}"
+         TargetType="TextBlock">
+    <Setter Property="TextWrapping" Value="Wrap" />
+  </Style>
+
+  <Style x:Key="ListTitleSmallStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SansBold}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="LineHeight" Value="18" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+  </Style>
+
+  <Style x:Key="ListTitleTinyStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SansBold}" />
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="LineHeight" Value="16" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+  </Style>
+
+  <Style x:Key="BodyLargeStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SansRegular}" />
+    <Setter Property="FontSize" Value="16" />
+    <Setter Property="LineHeight" Value="24" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+  </Style>
+
+  <Style x:Key="BodyStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SansRegular}" />
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="LineHeight" Value="24" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+  </Style>
+
+  <Style x:Key="BodySmallStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SansRegular}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="LineHeight" Value="20" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+  </Style>
+
+  <Style x:Key="MetaStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SansRegular}" />
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="LineHeight" Value="20" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="Foreground" Value="{StaticResource InkMutedBrush}" />
+  </Style>
+
+  <Style x:Key="MetaFaintStyle"
+         BasedOn="{StaticResource MetaStyle}"
+         TargetType="TextBlock">
+    <Setter Property="Foreground" Value="{StaticResource InkFaintBrush}" />
+  </Style>
+
+  <Style x:Key="CaptionStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SansRegular}" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="LineHeight" Value="16" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="Foreground" Value="{StaticResource InkMutedBrush}" />
+  </Style>
+
+  <Style x:Key="CaptionFaintStyle"
+         BasedOn="{StaticResource CaptionStyle}"
+         TargetType="TextBlock">
+    <Setter Property="Foreground" Value="{StaticResource InkFaintBrush}" />
+  </Style>
+
+  <Style x:Key="BadgeTextStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SansBold}" />
+    <Setter Property="FontSize" Value="10" />
+    <Setter Property="LineHeight" Value="12" />
+  </Style>
+
+  <Style x:Key="TagTextStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SansSemiBold}" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="LineHeight" Value="16" />
+    <Setter Property="Foreground" Value="{StaticResource GreenDeepBrush}" />
+  </Style>
+
+  <Style x:Key="TabLabelStyle" TargetType="TextBlock">
+    <Setter Property="FontFamily" Value="{StaticResource SansBold}" />
+    <Setter Property="FontSize" Value="10" />
+    <Setter Property="LineHeight" Value="12" />
+  </Style>
+
+</ResourceDictionary>

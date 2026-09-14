@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "Dorval",
+  "display": "standalone",
+  "name": "Dorval",
+  "short_name": "Dorval",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}

@@ -1,0 +1,93 @@
+<UserControl x:Class="Dorval.Presentation.Shell"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:Dorval.Presentation.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="using:Dorval.Presentation"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:utu="using:Uno.Toolkit.UI"
+             d:DesignHeight="812"
+             d:DesignWidth="375"
+             mc:Ignorable="d">
+
+  <!--
+    The frame only owns the screen above the bar. Hoisting the tab bar up here is what
+    keeps a tab switch from blinking: the deep-green bar is no longer torn out and
+    rebuilt with the page, so the only thing that changes is the content above it.
+  -->
+  <Grid Background="{StaticResource PaperBrush}">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <utu:ExtendedSplashScreen x:Name="Splash"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"
+                              HorizontalContentAlignment="Stretch"
+                              VerticalContentAlignment="Stretch">
+      <utu:ExtendedSplashScreen.LoadingContentTemplate>
+        <DataTemplate>
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="2*" />
+              <RowDefinition />
+            </Grid.RowDefinitions>
+            <ProgressRing Grid.Row="1"
+                          Width="48"
+                          Height="48"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Foreground="{StaticResource GreenDeepBrush}"
+                          IsActive="True" />
+          </Grid>
+        </DataTemplate>
+      </utu:ExtendedSplashScreen.LoadingContentTemplate>
+    </utu:ExtendedSplashScreen>
+
+    <controls:AppTabBar x:Name="TabBar"
+                        Grid.Row="1"
+                        ActiveTab="{Binding Chrome.ActiveTab}"
+                        SearchText="{Binding Filters.Search, Mode=TwoWay}"
+                        Visibility="{Binding Chrome.ShowTabBar}" />
+
+    <!--  One toast for the whole app: it confirms an action and gets out of the way.  -->
+    <Border x:Name="ToastHost"
+            Grid.RowSpan="2"
+            Height="36"
+            Margin="0,0,0,96"
+            Padding="16,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Background="{StaticResource InkBrush}"
+            CornerRadius="18"
+            IsHitTestVisible="False"
+            Visibility="{Binding Toasts.IsShowing}">
+      <Border.RenderTransform>
+        <TranslateTransform x:Name="ToastShift" />
+      </Border.RenderTransform>
+      <Border.Resources>
+        <Storyboard x:Name="ToastIn">
+          <DoubleAnimation Storyboard.TargetName="ToastHost"
+                           Storyboard.TargetProperty="Opacity"
+                           From="0"
+                           To="1"
+                           Duration="0:0:0.2" />
+          <DoubleAnimation Storyboard.TargetName="ToastShift"
+                           Storyboard.TargetProperty="Y"
+                           From="8"
+                           To="0"
+                           Duration="0:0:0.2">
+            <DoubleAnimation.EasingFunction>
+              <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+          </DoubleAnimation>
+        </Storyboard>
+      </Border.Resources>
+      <TextBlock FontFamily="{StaticResource SansSemiBold}"
+                 FontSize="13"
+                 Foreground="{StaticResource OnGreenBrush}"
+                 Text="{Binding Toasts.Message}" />
+    </Border>
+  </Grid>
+</UserControl>

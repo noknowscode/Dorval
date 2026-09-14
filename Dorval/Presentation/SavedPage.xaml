@@ -1,0 +1,247 @@
+<Page x:Class="Dorval.Presentation.SavedPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="using:Dorval.Presentation.Controls"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:models="using:Dorval.Models"
+      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+      xmlns:uen="using:Uno.Extensions.Navigation.UI"
+      xmlns:vm="using:Dorval.Presentation"
+      x:Name="PageRoot"
+      Background="{StaticResource PaperBrush}"
+      NavigationCacheMode="Required"
+      mc:Ignorable="d">
+
+  <Page.Resources>
+    <!--  Every saved row ends with the heart that put it there; tapping it removes the row.  -->
+    <Style x:Key="SavedRowStyle" TargetType="Border">
+      <Setter Property="Background" Value="{StaticResource CardBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource HairlineBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="Padding" Value="10" />
+    </Style>
+  </Page.Resources>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <controls:DomeHeader>
+      <controls:DomeHeader.HeaderContent>
+        <Grid>
+          <TextBlock VerticalAlignment="Center"
+                     Style="{StaticResource PageTitleOnGreenStyle}"
+                     Text="Saved" />
+          <Border Width="40"
+                  Height="40"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Center"
+                  Background="{StaticResource OnGreenBrush}"
+                  CornerRadius="20">
+            <controls:IconGlyph Data="M12 21s-8-5.5-8-11.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8 3.5C20 15.5 12 21 12 21z"
+                                IconFill="{StaticResource GreenDeepBrush}"
+                                IconStroke="{StaticResource GreenDeepBrush}"
+                                Size="20" />
+          </Border>
+        </Grid>
+      </controls:DomeHeader.HeaderContent>
+    </controls:DomeHeader>
+
+    <ScrollViewer Grid.Row="1"
+                  Padding="16,14,16,20"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Hidden">
+      <StackPanel Spacing="14">
+
+        <muxc:ItemsRepeater ItemsSource="{Binding Tabs}">
+          <muxc:ItemsRepeater.Layout>
+            <muxc:StackLayout Orientation="Horizontal" Spacing="8" />
+          </muxc:ItemsRepeater.Layout>
+          <muxc:ItemsRepeater.ItemTemplate>
+            <DataTemplate x:DataType="vm:FilterChip">
+              <ToggleButton Content="{Binding Label}"
+                            IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                            Style="{StaticResource StrongChipStyle}" />
+            </DataTemplate>
+          </muxc:ItemsRepeater.ItemTemplate>
+        </muxc:ItemsRepeater>
+
+        <TextBlock Padding="20,40"
+                   HorizontalAlignment="Center"
+                   Style="{StaticResource BodySmallStyle}"
+                   Foreground="{StaticResource InkFaintBrush}"
+                   Text="Nothing saved yet. Tap the heart on any event, place or post."
+                   TextAlignment="Center"
+                   Visibility="{Binding IsEmpty}" />
+
+        <!--  ===== Events  -->
+        <StackPanel Spacing="14" Visibility="{Binding ShowEvents}">
+          <Grid Padding="4,0">
+            <TextBlock VerticalAlignment="Bottom"
+                       Style="{StaticResource SectionHeadingSmallStyle}"
+                       Text="Upcoming events" />
+            <Button HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Content="See all"
+                    Style="{StaticResource LinkButtonStyle}"
+                    uen:Navigation.Request="-/Discover" />
+          </Grid>
+
+          <muxc:ItemsRepeater Margin="0,-6,0,0"
+                              ItemsSource="{Binding Events}"
+                              uen:Navigation.Request="Event">
+            <muxc:ItemsRepeater.Layout>
+              <muxc:StackLayout Spacing="10" />
+            </muxc:ItemsRepeater.Layout>
+            <muxc:ItemsRepeater.ItemTemplate>
+              <DataTemplate x:DataType="models:DorvalEvent">
+                <Border Style="{StaticResource SavedRowStyle}">
+                  <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:SlotImage Width="54"
+                                        Height="54"
+                                        SlotCornerRadius="10"
+                                        Source="{Binding ImageUrl}"
+                                        Tint="{StaticResource TintLeafBrush}" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                      <TextBlock Style="{StaticResource ListTitleSmallStyle}" Text="{Binding Title}" />
+                      <TextBlock Style="{StaticResource CaptionStyle}" Text="{Binding WhenLine}" />
+                      <TextBlock Style="{StaticResource CaptionFaintStyle}" Text="{Binding Place}" />
+                    </StackPanel>
+                    <Button Grid.Column="2"
+                            Margin="0,-8,-8,-8"
+                            AutomationProperties.Name="Remove from saved"
+                            Command="{Binding DataContext.UnsaveCommand, ElementName=PageRoot}"
+                            CommandParameter="{Binding Id}"
+                            Style="{StaticResource GhostIconButtonStyle}">
+                      <controls:IconGlyph Data="M12 21s-8-5.5-8-11.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8 3.5C20 15.5 12 21 12 21z"
+                                          IconFill="{StaticResource GreenDeepBrush}"
+                                          IconStroke="{StaticResource GreenDeepBrush}"
+                                          Size="18" />
+                    </Button>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </muxc:ItemsRepeater.ItemTemplate>
+          </muxc:ItemsRepeater>
+        </StackPanel>
+
+        <!--  ===== Places  -->
+        <StackPanel Spacing="14" Visibility="{Binding ShowPlaces}">
+          <Grid Padding="4,0">
+            <TextBlock VerticalAlignment="Bottom"
+                       Style="{StaticResource SectionHeadingSmallStyle}"
+                       Text="Saved places" />
+            <Button HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Content="See all"
+                    Style="{StaticResource LinkButtonStyle}"
+                    uen:Navigation.Request="-/Places" />
+          </Grid>
+
+          <muxc:ItemsRepeater Margin="0,-6,0,0" ItemsSource="{Binding Places}">
+            <muxc:ItemsRepeater.Layout>
+              <muxc:StackLayout Spacing="10" />
+            </muxc:ItemsRepeater.Layout>
+            <muxc:ItemsRepeater.ItemTemplate>
+              <DataTemplate x:DataType="models:Place">
+                <Border Style="{StaticResource SavedRowStyle}">
+                  <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:SlotImage Width="54"
+                                        Height="46"
+                                        SlotCornerRadius="10"
+                                        Source="{Binding ImageUrl}"
+                                        Tint="{StaticResource TintStoneBrush}" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                      <TextBlock Style="{StaticResource ListTitleSmallStyle}" Text="{Binding Name}" />
+                      <TextBlock Style="{StaticResource CaptionFaintStyle}" Text="{Binding Kind}" />
+                    </StackPanel>
+                    <Button Grid.Column="2"
+                            Margin="0,-8,-8,-8"
+                            AutomationProperties.Name="Remove from saved"
+                            Command="{Binding DataContext.UnsaveCommand, ElementName=PageRoot}"
+                            CommandParameter="{Binding Id}"
+                            Style="{StaticResource GhostIconButtonStyle}">
+                      <controls:IconGlyph Data="M12 21s-8-5.5-8-11.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8 3.5C20 15.5 12 21 12 21z"
+                                          IconFill="{StaticResource GreenDeepBrush}"
+                                          IconStroke="{StaticResource GreenDeepBrush}"
+                                          Size="18" />
+                    </Button>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </muxc:ItemsRepeater.ItemTemplate>
+          </muxc:ItemsRepeater>
+        </StackPanel>
+
+        <!--  ===== Posts  -->
+        <StackPanel Spacing="14" Visibility="{Binding ShowPosts}">
+          <Grid Padding="4,0">
+            <TextBlock VerticalAlignment="Bottom"
+                       Style="{StaticResource SectionHeadingSmallStyle}"
+                       Text="Saved posts" />
+            <Button HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Content="See all"
+                    Style="{StaticResource LinkButtonStyle}"
+                    uen:Navigation.Request="-/Community" />
+          </Grid>
+
+          <muxc:ItemsRepeater Margin="0,-6,0,0"
+                              ItemsSource="{Binding Posts}"
+                              uen:Navigation.Request="Post">
+            <muxc:ItemsRepeater.Layout>
+              <muxc:StackLayout Spacing="10" />
+            </muxc:ItemsRepeater.Layout>
+            <muxc:ItemsRepeater.ItemTemplate>
+              <DataTemplate x:DataType="models:CommunityPost">
+                <Border Style="{StaticResource SavedRowStyle}">
+                  <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:SlotImage Width="54"
+                                        Height="46"
+                                        SlotCornerRadius="10"
+                                        Source="{Binding ImageUrl}"
+                                        Tint="{StaticResource TintMistBrush}" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                      <TextBlock Style="{StaticResource ListTitleSmallStyle}" Text="{Binding Title}" />
+                      <TextBlock Style="{StaticResource CaptionFaintStyle}" Text="{Binding Meta}" />
+                    </StackPanel>
+                    <Button Grid.Column="2"
+                            Margin="0,-8,-8,-8"
+                            AutomationProperties.Name="Remove from saved"
+                            Command="{Binding DataContext.UnsaveCommand, ElementName=PageRoot}"
+                            CommandParameter="{Binding Id}"
+                            Style="{StaticResource GhostIconButtonStyle}">
+                      <controls:IconGlyph Data="M12 21s-8-5.5-8-11.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8 3.5C20 15.5 12 21 12 21z"
+                                          IconFill="{StaticResource GreenDeepBrush}"
+                                          IconStroke="{StaticResource GreenDeepBrush}"
+                                          Size="18" />
+                    </Button>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </muxc:ItemsRepeater.ItemTemplate>
+          </muxc:ItemsRepeater>
+        </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</Page>

@@ -1,0 +1,201 @@
+<UserControl x:Class="Dorval.Presentation.Controls.AppTabBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:Dorval.Presentation.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sys="using:System"
+             xmlns:uen="using:Uno.Extensions.Navigation.UI"
+             xmlns:utu="using:Uno.Toolkit.UI"
+             x:Name="Root"
+             mc:Ignorable="d">
+
+  <UserControl.Resources>
+    <sys:String x:Key="TodayIcon">M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z</sys:String>
+    <sys:String x:Key="DiscoverIcon">M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM21 21l-4.5-4.5</sys:String>
+    <sys:String x:Key="PlacesIcon">M12 22s7-7 7-12a7 7 0 0 0-14 0c0 5 7 12 7 12zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z</sys:String>
+    <sys:String x:Key="CommunityIcon">M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8</sys:String>
+    <sys:String x:Key="SavedIcon">M12 21s-8-5.5-8-11.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8 3.5C20 15.5 12 21 12 21z</sys:String>
+    <sys:String x:Key="ClearIcon">M18 6L6 18M6 6l12 12</sys:String>
+  </UserControl.Resources>
+
+  <!--
+    Five destinations that never move. The active root earns extra room instead of a
+    highlight: Today widens into a live date pill, Discover into the search field.
+    When neither is active all five carry their label.
+  -->
+  <Border Padding="10,8,10,20"
+          Background="{StaticResource GreenDeepBrush}"
+          BorderBrush="{StaticResource OnGreenHairlineBrush}"
+          BorderThickness="0,1,0,0"
+          utu:SafeArea.Insets="Bottom">
+    <Grid x:Name="TabRow" ColumnSpacing="2">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition x:Name="Col0" />
+        <ColumnDefinition x:Name="Col1" />
+        <ColumnDefinition x:Name="Col2" />
+        <ColumnDefinition x:Name="Col3" />
+        <ColumnDefinition x:Name="Col4" />
+      </Grid.ColumnDefinitions>
+
+      <!--  ===== Today: plain tab, or the date pill when Today is the root  -->
+
+      <Button x:Name="TodayTab"
+              Grid.Column="0"
+              Height="44"
+              AutomationProperties.Name="Today"
+              Style="{StaticResource FlatButtonStyle}"
+              uen:Navigation.Request="-/Today">
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="4">
+          <controls:IconGlyph x:Name="TodayGlyph" Data="{StaticResource TodayIcon}" />
+          <TextBlock x:Name="TodayLabel"
+                     HorizontalAlignment="Center"
+                     Style="{StaticResource TabLabelStyle}"
+                     Text="TODAY" />
+        </StackPanel>
+      </Button>
+
+      <Button x:Name="TodayPill"
+              Grid.Column="0"
+              Height="44"
+              Padding="12,0,14,0"
+              AutomationProperties.Name="Today"
+              Background="{StaticResource OnGreenWashBrush}"
+              CornerRadius="22"
+              Style="{StaticResource FlatButtonStyle}"
+              uen:Navigation.Request="-/Today">
+        <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    Spacing="10">
+          <controls:IconGlyph Data="{StaticResource TodayIcon}"
+                              IconStroke="{StaticResource OnGreenBrush}"
+                              Size="22" />
+          <StackPanel VerticalAlignment="Center">
+            <TextBlock Foreground="{StaticResource OnGreenBrush}"
+                       Style="{StaticResource TabLabelStyle}"
+                       Text="TODAY" />
+            <TextBlock x:Name="TodayDateText"
+                       FontFamily="{StaticResource SansSemiBold}"
+                       FontSize="12"
+                       Foreground="{StaticResource OnGreenSoftBrush}"
+                       LineHeight="14" />
+          </StackPanel>
+        </StackPanel>
+      </Button>
+
+      <!--  ===== Discover: plain tab, or the search field when Discover is the root  -->
+
+      <Button x:Name="DiscoverTab"
+              Grid.Column="1"
+              Height="44"
+              AutomationProperties.Name="Discover"
+              Style="{StaticResource FlatButtonStyle}"
+              uen:Navigation.Request="-/Discover">
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="4">
+          <controls:IconGlyph x:Name="DiscoverGlyph" Data="{StaticResource DiscoverIcon}" />
+          <TextBlock x:Name="DiscoverLabel"
+                     HorizontalAlignment="Center"
+                     Style="{StaticResource TabLabelStyle}"
+                     Text="DISCOVER" />
+        </StackPanel>
+      </Button>
+
+      <Border x:Name="SearchPill"
+              Grid.Column="1"
+              Height="44"
+              Padding="12,0,8,0"
+              Background="{StaticResource OnGreenWashBrush}"
+              CornerRadius="22">
+        <Grid ColumnSpacing="8">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+
+          <controls:IconGlyph Data="{StaticResource DiscoverIcon}"
+                              IconStroke="{StaticResource OnGreenBrush}"
+                              Size="20" />
+
+          <TextBox x:Name="SearchBox"
+                   Grid.Column="1"
+                   AutomationProperties.Name="Search events and places"
+                   PlaceholderText="Search events, places…"
+                   Style="{StaticResource TabSearchTextBoxStyle}" />
+
+          <Button x:Name="ClearSearchButton"
+                  Grid.Column="2"
+                  Width="28"
+                  Height="28"
+                  AutomationProperties.Name="Clear search"
+                  Background="{StaticResource OnGreenWashStrongBrush}"
+                  Click="OnClearSearch"
+                  CornerRadius="14"
+                  Style="{StaticResource FlatButtonStyle}">
+            <controls:IconGlyph Data="{StaticResource ClearIcon}"
+                                IconStroke="{StaticResource OnGreenBrush}"
+                                IconThickness="2.5"
+                                Size="12" />
+          </Button>
+        </Grid>
+      </Border>
+
+      <!--  ===== The three that never expand  -->
+
+      <Button x:Name="PlacesTab"
+              Grid.Column="2"
+              Height="44"
+              AutomationProperties.Name="Places"
+              Style="{StaticResource FlatButtonStyle}"
+              uen:Navigation.Request="-/Places">
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="4">
+          <controls:IconGlyph x:Name="PlacesGlyph" Data="{StaticResource PlacesIcon}" />
+          <TextBlock x:Name="PlacesLabel"
+                     HorizontalAlignment="Center"
+                     Style="{StaticResource TabLabelStyle}"
+                     Text="PLACES" />
+        </StackPanel>
+      </Button>
+
+      <Button x:Name="CommunityTab"
+              Grid.Column="3"
+              Height="44"
+              AutomationProperties.Name="Community"
+              Style="{StaticResource FlatButtonStyle}"
+              uen:Navigation.Request="-/Community">
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="4">
+          <controls:IconGlyph x:Name="CommunityGlyph" Data="{StaticResource CommunityIcon}" />
+          <TextBlock x:Name="CommunityLabel"
+                     HorizontalAlignment="Center"
+                     Style="{StaticResource TabLabelStyle}"
+                     Text="COMMUNITY" />
+        </StackPanel>
+      </Button>
+
+      <Button x:Name="SavedTab"
+              Grid.Column="4"
+              Height="44"
+              AutomationProperties.Name="Saved"
+              Style="{StaticResource FlatButtonStyle}"
+              uen:Navigation.Request="-/Saved">
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="4">
+          <controls:IconGlyph x:Name="SavedGlyph" Data="{StaticResource SavedIcon}" />
+          <TextBlock x:Name="SavedLabel"
+                     HorizontalAlignment="Center"
+                     Style="{StaticResource TabLabelStyle}"
+                     Text="SAVED" />
+        </StackPanel>
+      </Button>
+    </Grid>
+  </Border>
+</UserControl>

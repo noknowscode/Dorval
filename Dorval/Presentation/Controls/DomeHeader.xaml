@@ -1,0 +1,30 @@
+<UserControl x:Class="Dorval.Presentation.Controls.DomeHeader"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:Dorval.Presentation.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:utu="using:Uno.Toolkit.UI"
+             x:Name="Root"
+             mc:Ignorable="d">
+
+  <!--
+    The green dome that opens Today, Community and Saved. The curve is a Bézier rather
+    than a CornerRadius because it is an ellipse — wide and shallow — and CornerRadius
+    cannot express different horizontal and vertical radii.
+  -->
+  <Grid>
+    <Path x:Name="Dome"
+          VerticalAlignment="Top"
+          Data="M0,0 H375 V129 C375,164 291,193 187.5,193 C84,193 0,164 0,129 Z"
+          Fill="{StaticResource GreenDeepBrush}"
+          Stretch="Fill" />
+
+    <StackPanel x:Name="Body"
+                Padding="22,14,22,84"
+                utu:SafeArea.Insets="Top">
+      <controls:MockStatusBar Foreground="{StaticResource OnGreenBrush}" />
+      <ContentPresenter Margin="0,14,0,0" Content="{Binding HeaderContent, ElementName=Root}" />
+    </StackPanel>
+  </Grid>
+</UserControl>

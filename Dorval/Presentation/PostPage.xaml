@@ -1,0 +1,206 @@
+<Page x:Class="Dorval.Presentation.PostPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="using:Dorval.Presentation.Controls"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:models="using:Dorval.Models"
+      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{StaticResource CardBrush}"
+      mc:Ignorable="d">
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <controls:ScreenHeader Eyebrow="COMMUNITY POST">
+      <controls:ScreenHeader.TrailingContent>
+        <Button AutomationProperties.Name="More options"
+                Command="{Binding ShowMoreCommand}"
+                Style="{StaticResource CircleIconButtonStyle}">
+          <TextBlock FontFamily="{StaticResource SansBold}"
+                     FontSize="18"
+                     Foreground="{StaticResource InkBrush}"
+                     Text="···" />
+        </Button>
+      </controls:ScreenHeader.TrailingContent>
+    </controls:ScreenHeader>
+
+    <ScrollViewer Grid.Row="1"
+                  Padding="22,8,22,20"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Hidden">
+      <StackPanel Spacing="16">
+
+        <Grid>
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Border Width="40"
+                    Height="40"
+                    Background="{StaticResource GreenDeepBrush}"
+                    CornerRadius="20">
+              <TextBlock HorizontalAlignment="Center"
+                         VerticalAlignment="Center"
+                         FontFamily="{StaticResource SansBold}"
+                         FontSize="16"
+                         Foreground="{StaticResource OnGreenBrush}"
+                         Text="{Binding Post.Initial}" />
+            </Border>
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Style="{StaticResource ListTitleSmallStyle}" Text="{Binding Post.Author}" />
+              <TextBlock Style="{StaticResource CaptionFaintStyle}" Text="{Binding AuthorLine}" />
+            </StackPanel>
+          </StackPanel>
+
+          <Border Padding="9,5"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Center"
+                  Background="{Binding CategoryBackground}"
+                  CornerRadius="6">
+            <TextBlock FontFamily="{StaticResource SansBold}"
+                       FontSize="11"
+                       Foreground="{Binding CategoryForeground}"
+                       LineHeight="14"
+                       Text="{Binding Post.CategoryLabel}" />
+          </Border>
+        </Grid>
+
+        <TextBlock Style="{StaticResource PostTitleStyle}" Text="{Binding Post.Title}" />
+        <TextBlock Style="{StaticResource BodyStyle}" Text="{Binding Post.Body}" />
+
+        <Grid Padding="0,10"
+              BorderBrush="{StaticResource DividerBrush}"
+              BorderThickness="0,1,0,1">
+          <StackPanel Orientation="Horizontal"
+                      VerticalAlignment="Center"
+                      Spacing="16">
+            <TextBlock VerticalAlignment="Center"
+                       Style="{StaticResource MetaStyle}"
+                       Text="{Binding ReplyCountLabel}" />
+            <Button Height="30"
+                    Padding="10,0"
+                    Background="{Binding HelpfulBackground}"
+                    Command="{Binding ToggleHelpfulCommand}"
+                    CornerRadius="15"
+                    Style="{StaticResource FlatButtonStyle}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <controls:IconGlyph Data="M12 3l1.8 5.5H20l-4.7 3.4 1.8 5.6L12 14l-5.1 3.5 1.8-5.6L4 8.5h6.2z"
+                                    IconStroke="{Binding HelpfulForeground}"
+                                    Size="14" />
+                <TextBlock VerticalAlignment="Center"
+                           FontFamily="{StaticResource SansSemiBold}"
+                           FontSize="13"
+                           Foreground="{Binding HelpfulForeground}"
+                           Text="{Binding HelpfulLabel}" />
+              </StackPanel>
+            </Button>
+          </StackPanel>
+
+          <Button Padding="6"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Center"
+                  AutomationProperties.Name="Bookmark this post"
+                  Command="{Binding ToggleBookmarkCommand}"
+                  Style="{StaticResource FlatButtonStyle}">
+            <controls:IconGlyph Data="M6 3h12v18l-6-4-6 4z"
+                                IconFill="{Binding BookmarkFill}"
+                                IconStroke="{StaticResource GreenDeepBrush}"
+                                Size="18" />
+          </Button>
+        </Grid>
+
+        <muxc:ItemsRepeater ItemsSource="{Binding Replies}">
+          <muxc:ItemsRepeater.Layout>
+            <muxc:StackLayout Spacing="16" />
+          </muxc:ItemsRepeater.Layout>
+          <muxc:ItemsRepeater.ItemTemplate>
+            <DataTemplate x:DataType="models:PostReply">
+              <Border Padding="14"
+                      Background="{StaticResource PaperBrush}"
+                      CornerRadius="14">
+                <StackPanel Spacing="8">
+                  <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Border Width="32"
+                            Height="32"
+                            Background="{StaticResource GoldBrush}"
+                            CornerRadius="16">
+                      <TextBlock HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 FontFamily="{StaticResource SansBold}"
+                                 FontSize="13"
+                                 Foreground="{StaticResource OnGreenBrush}"
+                                 Text="{Binding Initial}" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                      <TextBlock Style="{StaticResource ListTitleTinyStyle}" Text="{Binding Author}" />
+                      <StackPanel Orientation="Horizontal" Spacing="4">
+                        <TextBlock VerticalAlignment="Center"
+                                   FontFamily="{StaticResource SansRegular}"
+                                   FontSize="11"
+                                   Foreground="{StaticResource InkFaintBrush}"
+                                   Text="{Binding Role}" />
+                        <!--  Verified resident: the rosette, then the tick punched out of it  -->
+                        <Grid Width="11"
+                              Height="11"
+                              VerticalAlignment="Center">
+                          <controls:IconGlyph Data="M12 2l2.4 2.4 3.4-.4.4 3.4L21 9.6l-1.6 3 1 3.3-3.3 1-1.2 3.2-3.1-1.4L9.7 20l-1.2-3.2-3.3-1 1-3.3-1.6-3L7.4 7.4 7 4l3.4.4z"
+                                              IconFill="{StaticResource GreenMidBrush}"
+                                              Size="11" />
+                          <controls:IconGlyph Data="M8.5 12.5l2.3 2.3 4.7-4.8"
+                                              IconStroke="{StaticResource OnGreenBrush}"
+                                              Size="11" />
+                        </Grid>
+                        <TextBlock VerticalAlignment="Center"
+                                   FontFamily="{StaticResource SansRegular}"
+                                   FontSize="11"
+                                   Foreground="{StaticResource InkFaintBrush}"
+                                   Text="{Binding Ago}" />
+                      </StackPanel>
+                    </StackPanel>
+                  </StackPanel>
+                  <TextBlock Style="{StaticResource BodySmallStyle}"
+                             LineHeight="20"
+                             Text="{Binding Text}" />
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </muxc:ItemsRepeater.ItemTemplate>
+        </muxc:ItemsRepeater>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Grid Grid.Row="2"
+          Padding="16,12,16,24"
+          Background="{StaticResource CardBrush}"
+          BorderBrush="{StaticResource DividerBrush}"
+          BorderThickness="0,1,0,0"
+          ColumnSpacing="8"
+          utu:SafeArea.Insets="Bottom">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+
+      <TextBox AutomationProperties.Name="Write a reply"
+               PlaceholderText="Write a reply…"
+               Style="{StaticResource ComposerTextBoxStyle}"
+               Text="{Binding ReplyText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+      <Button Grid.Column="1"
+              Width="44"
+              Height="44"
+              AutomationProperties.Name="Send reply"
+              Background="{StaticResource GreenDeepBrush}"
+              Command="{Binding SendReplyCommand}"
+              CornerRadius="12"
+              Style="{StaticResource FlatButtonStyle}">
+        <controls:IconGlyph Data="M22 2L11 13M22 2l-7 20-4-9-9-4z"
+                            IconStroke="{StaticResource OnGreenBrush}"
+                            Size="18" />
+      </Button>
+    </Grid>
+  </Grid>
+</Page>

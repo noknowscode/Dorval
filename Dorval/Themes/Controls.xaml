@@ -1,0 +1,670 @@
+<!--
+  Dorval control system.
+  Material's stock Button/ToggleButton chrome (ripple, elevation, 56px minimums,
+  uppercase labels) fights this design, so interactive surfaces are retemplated
+  onto one flat template with a shared press feel: 0.98 scale + a tint wash,
+  90ms down / 140ms up on the house ease-out spline.
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!--  ===== Shared button templates =================================  -->
+
+  <ControlTemplate x:Key="FlatButtonTemplate" TargetType="Button">
+    <Grid x:Name="Root"
+          Background="{TemplateBinding Background}"
+          BorderBrush="{TemplateBinding BorderBrush}"
+          BorderThickness="{TemplateBinding BorderThickness}"
+          CornerRadius="{TemplateBinding CornerRadius}"
+          RenderTransformOrigin="0.5,0.5">
+      <Grid.RenderTransform>
+        <ScaleTransform x:Name="PressScale" />
+      </Grid.RenderTransform>
+      <Border x:Name="Wash"
+              Background="{TemplateBinding Foreground}"
+              CornerRadius="{TemplateBinding CornerRadius}"
+              Opacity="0" />
+      <ContentPresenter x:Name="Content"
+                        Padding="{TemplateBinding Padding}"
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                        Content="{TemplateBinding Content}"
+                        ContentTemplate="{TemplateBinding ContentTemplate}" />
+      <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup x:Name="CommonStates">
+          <VisualState x:Name="Normal">
+            <Storyboard>
+              <DoubleAnimation Storyboard.TargetName="Wash"
+                               Storyboard.TargetProperty="Opacity"
+                               To="0"
+                               Duration="0:0:0.14">
+                <DoubleAnimation.EasingFunction>
+                  <CubicEase EasingMode="EaseOut" />
+                </DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="PressScale"
+                               Storyboard.TargetProperty="ScaleX"
+                               To="1"
+                               Duration="0:0:0.14" />
+              <DoubleAnimation Storyboard.TargetName="PressScale"
+                               Storyboard.TargetProperty="ScaleY"
+                               To="1"
+                               Duration="0:0:0.14" />
+            </Storyboard>
+          </VisualState>
+          <VisualState x:Name="PointerOver">
+            <Storyboard>
+              <DoubleAnimation Storyboard.TargetName="Wash"
+                               Storyboard.TargetProperty="Opacity"
+                               To="0.06"
+                               Duration="0:0:0.14" />
+            </Storyboard>
+          </VisualState>
+          <VisualState x:Name="Pressed">
+            <Storyboard>
+              <DoubleAnimation Storyboard.TargetName="Wash"
+                               Storyboard.TargetProperty="Opacity"
+                               To="0.12"
+                               Duration="0:0:0.09" />
+              <DoubleAnimation Storyboard.TargetName="PressScale"
+                               Storyboard.TargetProperty="ScaleX"
+                               To="0.98"
+                               Duration="0:0:0.09" />
+              <DoubleAnimation Storyboard.TargetName="PressScale"
+                               Storyboard.TargetProperty="ScaleY"
+                               To="0.98"
+                               Duration="0:0:0.09" />
+            </Storyboard>
+          </VisualState>
+          <VisualState x:Name="Disabled">
+            <VisualState.Setters>
+              <Setter Target="Root.Opacity" Value="0.4" />
+            </VisualState.Setters>
+          </VisualState>
+        </VisualStateGroup>
+      </VisualStateManager.VisualStateGroups>
+    </Grid>
+  </ControlTemplate>
+
+  <!--  Cards are large: they lift on hover instead of washing, and press less.  -->
+  <ControlTemplate x:Key="CardButtonTemplate" TargetType="Button">
+    <Grid x:Name="Root"
+          Background="{TemplateBinding Background}"
+          BorderBrush="{TemplateBinding BorderBrush}"
+          BorderThickness="{TemplateBinding BorderThickness}"
+          CornerRadius="{TemplateBinding CornerRadius}"
+          RenderTransformOrigin="0.5,0.5">
+      <Grid.RenderTransform>
+        <ScaleTransform x:Name="PressScale" />
+      </Grid.RenderTransform>
+      <ContentPresenter Padding="{TemplateBinding Padding}"
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                        Content="{TemplateBinding Content}"
+                        ContentTemplate="{TemplateBinding ContentTemplate}" />
+      <Border x:Name="Hairline"
+              BorderBrush="{StaticResource GreenLineBrush}"
+              BorderThickness="{TemplateBinding BorderThickness}"
+              CornerRadius="{TemplateBinding CornerRadius}"
+              IsHitTestVisible="False"
+              Opacity="0" />
+      <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup x:Name="CommonStates">
+          <VisualState x:Name="Normal">
+            <Storyboard>
+              <DoubleAnimation Storyboard.TargetName="Hairline"
+                               Storyboard.TargetProperty="Opacity"
+                               To="0"
+                               Duration="0:0:0.2" />
+              <DoubleAnimation Storyboard.TargetName="PressScale"
+                               Storyboard.TargetProperty="ScaleX"
+                               To="1"
+                               Duration="0:0:0.14" />
+              <DoubleAnimation Storyboard.TargetName="PressScale"
+                               Storyboard.TargetProperty="ScaleY"
+                               To="1"
+                               Duration="0:0:0.14" />
+            </Storyboard>
+          </VisualState>
+          <VisualState x:Name="PointerOver">
+            <Storyboard>
+              <DoubleAnimation Storyboard.TargetName="Hairline"
+                               Storyboard.TargetProperty="Opacity"
+                               To="1"
+                               Duration="0:0:0.2" />
+            </Storyboard>
+          </VisualState>
+          <VisualState x:Name="Pressed">
+            <Storyboard>
+              <DoubleAnimation Storyboard.TargetName="Hairline"
+                               Storyboard.TargetProperty="Opacity"
+                               To="1"
+                               Duration="0:0:0.09" />
+              <DoubleAnimation Storyboard.TargetName="PressScale"
+                               Storyboard.TargetProperty="ScaleX"
+                               To="0.99"
+                               Duration="0:0:0.09" />
+              <DoubleAnimation Storyboard.TargetName="PressScale"
+                               Storyboard.TargetProperty="ScaleY"
+                               To="0.99"
+                               Duration="0:0:0.09" />
+            </Storyboard>
+          </VisualState>
+        </VisualStateGroup>
+      </VisualStateManager.VisualStateGroups>
+    </Grid>
+  </ControlTemplate>
+
+  <!--  ===== Buttons =================================================  -->
+
+  <Style x:Key="FlatButtonStyle" TargetType="Button">
+    <Setter Property="Template" Value="{StaticResource FlatButtonTemplate}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="FontFamily" Value="{StaticResource SansSemiBold}" />
+    <Setter Property="UseSystemFocusVisuals" Value="True" />
+  </Style>
+
+  <!--  Full-width commitment: Remind me, Continue, I understand  -->
+  <Style x:Key="PrimaryActionButtonStyle"
+         BasedOn="{StaticResource FlatButtonStyle}"
+         TargetType="Button">
+    <Setter Property="Height" Value="52" />
+    <Setter Property="CornerRadius" Value="14" />
+    <Setter Property="Background" Value="{StaticResource GreenDeepBrush}" />
+    <Setter Property="Foreground" Value="{StaticResource OnGreenBrush}" />
+    <Setter Property="FontFamily" Value="{StaticResource SansBold}" />
+    <Setter Property="FontSize" Value="16" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+  </Style>
+
+  <!--  Confirmed variant of the same button: keeps the footprint, drops the weight  -->
+  <Style x:Key="PrimaryActionDoneButtonStyle"
+         BasedOn="{StaticResource PrimaryActionButtonStyle}"
+         TargetType="Button">
+    <Setter Property="Background" Value="{StaticResource GreenSoftBrush}" />
+    <Setter Property="Foreground" Value="{StaticResource GreenDeepBrush}" />
+  </Style>
+
+  <!--  Bottom action bar: 44px row of Save / Add to calendar / Share  -->
+  <Style x:Key="BarActionButtonStyle"
+         BasedOn="{StaticResource FlatButtonStyle}"
+         TargetType="Button">
+    <Setter Property="Height" Value="44" />
+    <Setter Property="MinHeight" Value="44" />
+    <Setter Property="CornerRadius" Value="12" />
+    <Setter Property="Padding" Value="8,0" />
+    <Setter Property="Background" Value="{StaticResource CardBrush}" />
+    <Setter Property="BorderBrush" Value="{StaticResource HairlineBrush}" />
+    <Setter Property="Foreground" Value="{StaticResource GreenDeepBrush}" />
+    <Setter Property="FontSize" Value="13" />
+  </Style>
+
+  <Style x:Key="BarActionAccentButtonStyle"
+         BasedOn="{StaticResource BarActionButtonStyle}"
+         TargetType="Button">
+    <Setter Property="Background" Value="{StaticResource GreenDeepBrush}" />
+    <Setter Property="BorderBrush" Value="{StaticResource GreenDeepBrush}" />
+    <Setter Property="Foreground" Value="{StaticResource OnGreenBrush}" />
+  </Style>
+
+  <Style x:Key="BarActionSavedButtonStyle"
+         BasedOn="{StaticResource BarActionButtonStyle}"
+         TargetType="Button">
+    <Setter Property="Background" Value="{StaticResource GreenSoftBrush}" />
+  </Style>
+
+  <!--  Round 40px header affordances  -->
+  <Style x:Key="CircleIconButtonStyle"
+         BasedOn="{StaticResource FlatButtonStyle}"
+         TargetType="Button">
+    <Setter Property="Width" Value="40" />
+    <Setter Property="Height" Value="40" />
+    <Setter Property="CornerRadius" Value="20" />
+    <Setter Property="Background" Value="{StaticResource PaperBrush}" />
+    <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+  </Style>
+
+  <Style x:Key="CircleIconOnGreenButtonStyle"
+         BasedOn="{StaticResource CircleIconButtonStyle}"
+         TargetType="Button">
+    <Setter Property="Background" Value="{StaticResource OnGreenWashBrush}" />
+    <Setter Property="Foreground" Value="{StaticResource OnGreenBrush}" />
+  </Style>
+
+  <Style x:Key="CircleIconInverseButtonStyle"
+         BasedOn="{StaticResource CircleIconButtonStyle}"
+         TargetType="Button">
+    <Setter Property="Background" Value="{StaticResource OnGreenBrush}" />
+    <Setter Property="Foreground" Value="{StaticResource GreenDeepBrush}" />
+  </Style>
+
+  <!--  44px hit target around a 18px heart, pulled flush by negative margin at use site  -->
+  <Style x:Key="GhostIconButtonStyle"
+         BasedOn="{StaticResource FlatButtonStyle}"
+         TargetType="Button">
+    <Setter Property="Width" Value="44" />
+    <Setter Property="Height" Value="44" />
+    <Setter Property="CornerRadius" Value="22" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{StaticResource GreenDeepBrush}" />
+  </Style>
+
+  <!--  Whole-card tap targets  -->
+  <Style x:Key="CardButtonStyle" TargetType="Button">
+    <Setter Property="Template" Value="{StaticResource CardButtonTemplate}" />
+    <Setter Property="Background" Value="{StaticResource CardBrush}" />
+    <Setter Property="BorderBrush" Value="{StaticResource HairlineBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="16" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="UseSystemFocusVisuals" Value="True" />
+  </Style>
+
+  <Style x:Key="PlainCardButtonStyle"
+         BasedOn="{StaticResource CardButtonStyle}"
+         TargetType="Button">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+
+  <!--  Inline "See all" / "Clear" text actions  -->
+  <Style x:Key="LinkButtonStyle"
+         BasedOn="{StaticResource FlatButtonStyle}"
+         TargetType="Button">
+    <Setter Property="Foreground" Value="{StaticResource GreenMidBrush}" />
+    <Setter Property="FontFamily" Value="{StaticResource SansRegular}" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Padding" Value="6,4" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Margin" Value="0,0,-6,0" />
+  </Style>
+
+  <!--
+    ===== Chips ===================================================
+
+    Pills carry an explicit Height and a CornerRadius of exactly half it. The Skia
+    renderer reduces an oversized radius per axis instead of clamping it to a circle,
+    so the "999" idiom turns a 30-tall chip into a squished oval rather than a pill.
+  -->
+
+  <!--  Soft: filter chips that add to a query rather than replacing it  -->
+  <Style x:Key="SoftChipStyle" TargetType="ToggleButton">
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="12,0" />
+    <Setter Property="Height" Value="34" />
+    <Setter Property="CornerRadius" Value="17" />
+    <Setter Property="FontFamily" Value="{StaticResource SansSemiBold}" />
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ToggleButton">
+          <Grid x:Name="Root"
+                Padding="{TemplateBinding Padding}"
+                Background="{StaticResource CardBrush}"
+                BorderBrush="{StaticResource HairlineBrush}"
+                BorderThickness="1"
+                CornerRadius="{TemplateBinding CornerRadius}">
+            <ContentPresenter x:Name="Text"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Content="{TemplateBinding Content}"
+                              Foreground="{StaticResource InkBrush}" />
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver">
+                  <VisualState.Setters>
+                    <Setter Target="Root.BorderBrush" Value="{StaticResource GreenLineBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Pressed">
+                  <VisualState.Setters>
+                    <Setter Target="Root.BorderBrush" Value="{StaticResource GreenLineBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Checked">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource GreenSoftBrush}" />
+                    <Setter Target="Root.BorderBrush" Value="{StaticResource GreenSoftBrush}" />
+                    <Setter Target="Text.Foreground" Value="{StaticResource GreenDeepBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="CheckedPointerOver">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource GreenSoftBrush}" />
+                    <Setter Target="Root.BorderBrush" Value="{StaticResource GreenLineBrush}" />
+                    <Setter Target="Text.Foreground" Value="{StaticResource GreenDeepBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="CheckedPressed">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource GreenSoftBrush}" />
+                    <Setter Target="Root.BorderBrush" Value="{StaticResource GreenLineBrush}" />
+                    <Setter Target="Text.Foreground" Value="{StaticResource GreenDeepBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!--  Strong: chips that pick exactly one thing (saved tabs, ages)  -->
+  <Style x:Key="StrongChipStyle" TargetType="ToggleButton">
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="12,0" />
+    <Setter Property="Height" Value="34" />
+    <Setter Property="CornerRadius" Value="17" />
+    <Setter Property="FontFamily" Value="{StaticResource SansSemiBold}" />
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ToggleButton">
+          <Grid x:Name="Root"
+                Padding="{TemplateBinding Padding}"
+                Background="{StaticResource CardBrush}"
+                BorderBrush="{StaticResource HairlineBrush}"
+                BorderThickness="1"
+                CornerRadius="{TemplateBinding CornerRadius}">
+            <ContentPresenter x:Name="Text"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Content="{TemplateBinding Content}"
+                              Foreground="{StaticResource InkBrush}" />
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver">
+                  <VisualState.Setters>
+                    <Setter Target="Root.BorderBrush" Value="{StaticResource GreenLineBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Pressed">
+                  <VisualState.Setters>
+                    <Setter Target="Root.BorderBrush" Value="{StaticResource GreenLineBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Checked">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource GreenDeepBrush}" />
+                    <Setter Target="Root.BorderBrush" Value="{StaticResource GreenDeepBrush}" />
+                    <Setter Target="Text.Foreground" Value="{StaticResource OnGreenBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="CheckedPointerOver">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource GreenMidBrush}" />
+                    <Setter Target="Root.BorderBrush" Value="{StaticResource GreenMidBrush}" />
+                    <Setter Target="Text.Foreground" Value="{StaticResource OnGreenBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="CheckedPressed">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource GreenMidBrush}" />
+                    <Setter Target="Root.BorderBrush" Value="{StaticResource GreenMidBrush}" />
+                    <Setter Target="Text.Foreground" Value="{StaticResource OnGreenBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!--  Square-ish variant of the same idea, for the age picker  -->
+  <Style x:Key="AgeChipStyle"
+         BasedOn="{StaticResource StrongChipStyle}"
+         TargetType="ToggleButton">
+    <Setter Property="CornerRadius" Value="12" />
+    <Setter Property="Padding" Value="14,0" />
+    <Setter Property="Height" Value="40" />
+    <Setter Property="FontFamily" Value="{StaticResource SansBold}" />
+    <Setter Property="FontSize" Value="14" />
+  </Style>
+
+  <!--  Chips that sit on the deep green header  -->
+  <Style x:Key="OnGreenChipStyle" TargetType="ToggleButton">
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="11,0" />
+    <Setter Property="Height" Value="30" />
+    <Setter Property="CornerRadius" Value="15" />
+    <Setter Property="FontFamily" Value="{StaticResource SansSemiBold}" />
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ToggleButton">
+          <Grid x:Name="Root"
+                Padding="{TemplateBinding Padding}"
+                Background="{StaticResource OnGreenWashBrush}"
+                CornerRadius="{TemplateBinding CornerRadius}">
+            <ContentPresenter x:Name="Text"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Content="{TemplateBinding Content}"
+                              Foreground="{StaticResource OnGreenBrush}" />
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource OnGreenWashStrongBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Pressed">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource OnGreenWashStrongBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Checked">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource OnGreenBrush}" />
+                    <Setter Target="Text.Foreground" Value="{StaticResource GreenDeepBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="CheckedPointerOver">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource OnGreenBrush}" />
+                    <Setter Target="Text.Foreground" Value="{StaticResource GreenDeepBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="CheckedPressed">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource OnGreenBrush}" />
+                    <Setter Target="Text.Foreground" Value="{StaticResource GreenDeepBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!--  Two-up segmented control (Me / My family)  -->
+  <Style x:Key="SegmentChipStyle" TargetType="ToggleButton">
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Height" Value="44" />
+    <Setter Property="CornerRadius" Value="11" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="FontFamily" Value="{StaticResource SansBold}" />
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ToggleButton">
+          <Grid x:Name="Root"
+                Background="Transparent"
+                CornerRadius="{TemplateBinding CornerRadius}">
+            <ContentPresenter x:Name="Text"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Content="{TemplateBinding Content}"
+                              Foreground="{StaticResource InkBrush}" />
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource DividerBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Checked">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource GreenDeepBrush}" />
+                    <Setter Target="Text.Foreground" Value="{StaticResource OnGreenBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="CheckedPointerOver">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource GreenMidBrush}" />
+                    <Setter Target="Text.Foreground" Value="{StaticResource OnGreenBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="CheckedPressed">
+                  <VisualState.Setters>
+                    <Setter Target="Root.Background" Value="{StaticResource GreenMidBrush}" />
+                    <Setter Target="Text.Foreground" Value="{StaticResource OnGreenBrush}" />
+                  </VisualState.Setters>
+                </VisualState>
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!--  ===== Selectable list rows ====================================  -->
+
+  <!--  Strips ListViewItem back to a plain host so the card owns its own chrome.  -->
+  <Style x:Key="BareListItemStyle" TargetType="ListViewItem">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ListViewItem">
+          <ContentPresenter HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!--  ===== Surfaces ================================================  -->
+
+  <Style x:Key="CardStyle" TargetType="Border">
+    <Setter Property="Background" Value="{StaticResource CardBrush}" />
+    <Setter Property="BorderBrush" Value="{StaticResource HairlineBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="18" />
+  </Style>
+
+  <Style x:Key="RowCardStyle"
+         BasedOn="{StaticResource CardStyle}"
+         TargetType="Border">
+    <Setter Property="CornerRadius" Value="16" />
+  </Style>
+
+  <Style x:Key="TightCardStyle"
+         BasedOn="{StaticResource CardStyle}"
+         TargetType="Border">
+    <Setter Property="CornerRadius" Value="14" />
+  </Style>
+
+  <!--  ===== Text entry ==============================================  -->
+
+  <!--  Reply composer: flat paper field, no Material underline or floating label  -->
+  <Style x:Key="ComposerTextBoxStyle" TargetType="TextBox">
+    <Setter Property="Height" Value="44" />
+    <Setter Property="MinHeight" Value="44" />
+    <Setter Property="Padding" Value="14,0" />
+    <Setter Property="FontFamily" Value="{StaticResource SansRegular}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+    <Setter Property="CornerRadius" Value="12" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="TextBox">
+          <Grid Background="{StaticResource PaperBrush}"
+                BorderBrush="{StaticResource HairlineBrush}"
+                BorderThickness="1"
+                CornerRadius="{TemplateBinding CornerRadius}">
+            <ContentControl x:Name="PlaceholderTextContentPresenter"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Center"
+                            Content="{TemplateBinding PlaceholderText}"
+                            Foreground="{StaticResource InkFaintBrush}"
+                            IsHitTestVisible="False"
+                            IsTabStop="False" />
+            <ScrollViewer x:Name="ContentElement"
+                          Padding="{TemplateBinding Padding}"
+                          VerticalContentAlignment="Center"
+                          HorizontalScrollBarVisibility="Hidden"
+                          IsTabStop="False"
+                          VerticalScrollBarVisibility="Hidden" />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!--  Search field living inside the green tab-bar pill  -->
+  <Style x:Key="TabSearchTextBoxStyle" TargetType="TextBox">
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="FontFamily" Value="{StaticResource SansRegular}" />
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="Foreground" Value="{StaticResource OnGreenBrush}" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="TextBox">
+          <Grid Background="Transparent">
+            <ContentControl x:Name="PlaceholderTextContentPresenter"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Center"
+                            Content="{TemplateBinding PlaceholderText}"
+                            Foreground="{StaticResource GreenMutedBrush}"
+                            IsHitTestVisible="False"
+                            IsTabStop="False" />
+            <ScrollViewer x:Name="ContentElement"
+                          VerticalContentAlignment="Center"
+                          HorizontalScrollBarVisibility="Hidden"
+                          IsTabStop="False"
+                          VerticalScrollBarVisibility="Hidden" />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+</ResourceDictionary>
