@@ -1,3 +1,5 @@
+> **Moved to uno-lab.** This project now lives in the `Dorval/` folder of [noknowscode/uno-lab](https://github.com/noknowscode/uno-lab/tree/main/Dorval) (private). This repository is archived and kept for its history.
+
 # Dorval
 
 A city guide app for Dorval: today's picks, events to discover, places on a city map, community posts, saved items, reminders, safety information and onboarding, behind a custom tab bar.
